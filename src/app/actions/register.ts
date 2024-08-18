@@ -4,13 +4,14 @@ import * as z from "zod";
 import { db } from "@/lib/db";
 import { RegisterSchema } from "@/schema/RegisterSchema";
 import bcrypt from "bcryptjs";
+// src/app/actions/register.ts
 import { getUserByEmail } from "@/utils/user";
 
 export const register = async (data: z.infer<typeof RegisterSchema>) => {
   const validateFields = RegisterSchema.safeParse(data);
 
   if (!validateFields.success) {
-    return { error: "Invalid fields" };
+    throw new Error("Invalid fields");
   }
 
   const { name, email, password } = validateFields.data;
@@ -19,11 +20,11 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
     const existingUserByEmail = await getUserByEmail(email);
 
     if (existingUserByEmail) {
-      return { error: "User already exist with this email" };
+      throw new Error("User already exists with this email");
     }
 
+    // If we reach this point, the user doesn't exist, so we can register them
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = await db.user.create({
       data: {
         name,
@@ -31,11 +32,9 @@ export const register = async (data: z.infer<typeof RegisterSchema>) => {
         password: hashedPassword,
       },
     });
-
     console.log("new user : ", newUser);
-
     return { success: "User Created Successfully" };
   } catch (error) {
-    return { error: "Something went wrong" };
+    throw error;
   }
 };

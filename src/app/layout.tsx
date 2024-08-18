@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <link
         rel="icon"
-        href="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/logo_lite-cbb357.png"
+        href="https://raw.githubusercontent.com/vercel/commerce/main/app/favicon.ico"
         sizes="any"
       />
       <body className={cn("bg-gray-100", inter.className)}>
