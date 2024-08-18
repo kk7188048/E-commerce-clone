@@ -18,6 +18,11 @@ import { Loader2 } from "lucide-react";
 import { RegisterSchema } from "@/schema/RegisterSchema";
 import { register } from "@/app/actions/register";
 
+interface RegisterResponse {
+  success: string;
+  error?: string; 
+}
+
 const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -33,7 +38,7 @@ const RegisterForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    register(values).then((res) => {
+    register(values).then((res : RegisterResponse) => {
       if (res.error) {
         toast({
           title: "User Registeration Failed",
